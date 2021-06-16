@@ -11,9 +11,17 @@ import java.io.PrintWriter;
 
 public class UnAuthEntryPoint implements AuthenticationEntryPoint {
 
+
+    /**
+     * unauthorized requests go here
+     * @param req
+     * @param res
+     * @param e
+     * @throws IOException
+     * @throws ServletException
+     */
     @Override
     public void commence(HttpServletRequest req, HttpServletResponse res, AuthenticationException e) throws IOException, ServletException {
-        //TODO unauthorized request goes here
 
         String errorMsg = "{\"status\":401 , \"message\":\"token expired, please login.\"}";
         res.setHeader("Access-Control-Allow-Headers", "content-type, token");
@@ -22,6 +30,7 @@ public class UnAuthEntryPoint implements AuthenticationEntryPoint {
 
         res.setCharacterEncoding("UTF-8");
         res.setContentType("application/json; charset=utf-8");
+        res.setStatus(401);
         PrintWriter out = res.getWriter();
         out.print(errorMsg);
         out.flush();

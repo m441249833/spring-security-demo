@@ -40,6 +40,8 @@ public class JwtUtil  {
 
         return JWT.create().withHeader(jwtHeader)
                 .withIssuer(ISSUER)
+                .withClaim("username",user.getUsername())
+                .withClaim("email",user.getUserInfo().getEmail())
                 .withClaim("auth",gson.toJson(user.getAuthorities()))
                 .withExpiresAt(date)
                 .sign(algorithm);

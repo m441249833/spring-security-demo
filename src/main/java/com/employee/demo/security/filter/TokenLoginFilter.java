@@ -5,8 +5,11 @@ import com.employee.demo.repository.UserRepository;
 import com.employee.demo.security.SecurityUser;
 import com.employee.demo.utils.JwtUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -30,6 +33,7 @@ public class TokenLoginFilter extends UsernamePasswordAuthenticationFilter {
     public TokenLoginFilter(AuthenticationManager authenticationManager, UserRepository userRepository){
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
+        this.setPostOnly(false);
         this.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/login","POST"));
     }
 
@@ -71,12 +75,15 @@ public class TokenLoginFilter extends UsernamePasswordAuthenticationFilter {
         String token = JwtUtil.sign(user);
 
         response.setStatus(HttpStatus.OK.value());
-        response.getWriter().write("{\"token\":\""+token+"\"}");
+        JsonObject json = new JsonObject();
+        json.addProperty("TOKEN",token);
+        response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
+        response.getWriter().write(json.toString());
     }
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
         response.setStatus(HttpStatus.FORBIDDEN.value());
-        response.getWriter().write("Login Failed");
+        response.getWriter().write("{\"message\" : \"Login Failed.\"}");
     }
 }

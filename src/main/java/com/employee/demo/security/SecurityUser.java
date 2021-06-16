@@ -13,20 +13,21 @@ public class SecurityUser implements UserDetails {
 
     private transient User userInfo;
 
-    private List<String> permissiomList;
+    private List<GrantedAuthority> permissiomList;
 
     public SecurityUser(){
 
     }
 
-    public SecurityUser(User user){
+    public SecurityUser(User user, List<GrantedAuthority> permissiomList){
         if (user != null){
             this.userInfo = user;
+            this.permissiomList = permissiomList;
         }
     }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return permissiomList;
     }
 
     @Override

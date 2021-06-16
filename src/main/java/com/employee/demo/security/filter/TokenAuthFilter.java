@@ -37,8 +37,11 @@ public class TokenAuthFilter extends BasicAuthenticationFilter {
         //If the authentication exists, give it to spring context.
         if (authRequest != null){
             SecurityContextHolder.getContext().setAuthentication(authRequest);
+            chain.doFilter(request,response);
+        }else {
+            response.setStatus(401);
+            response.getWriter().write("Access denied");
         }
-        chain.doFilter(request,response);
     }
 
 
@@ -49,7 +52,7 @@ public class TokenAuthFilter extends BasicAuthenticationFilter {
      */
     private UsernamePasswordAuthenticationToken getAuthtication(HttpServletRequest request){
         // Get token from request header.
-        String token = request.getHeader("token");
+        String token = request.getHeader("Authorization");
         if (token != null){
             //Get the username from the jwt token
             String username = JwtUtil.getUsernameByToken(token);
@@ -58,7 +61,7 @@ public class TokenAuthFilter extends BasicAuthenticationFilter {
             Collection<GrantedAuthority> authorities = new ArrayList<>();
             if (userTry.isPresent()){
                 User user = userTry.get();
-                authorities.add(new SimpleGrantedAuthority(user.getRole()));
+                authorities.add(new SimpleGrantedAuthority(user.getRole().getName()));
                 return new UsernamePasswordAuthenticationToken(user,token,authorities);
             }
         }

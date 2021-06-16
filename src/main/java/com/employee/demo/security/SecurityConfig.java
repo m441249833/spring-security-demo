@@ -41,17 +41,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().csrf().disable()
                 .authorizeRequests().anyRequest().authenticated()
                 .and()
-                .addFilterBefore(new TokenLoginFilter(this.authenticationManager(),userRepository), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new TokenAuthFilter(this.authenticationManager(),userRepository), BasicAuthenticationFilter.class)
+                .addFilter(new TokenLoginFilter(this.authenticationManager(),userRepository))
+                .addFilter(new TokenAuthFilter(this.authenticationManager(),userRepository))
                 .httpBasic();
     }
 
     @Override
     public void configure(WebSecurity web) throws Exception {
         //Ignoring the authentication of forget password service.
-        web.ignoring().antMatchers("/forget_password","/task/**","/employee/**").antMatchers(HttpMethod.DELETE,"/**");
+        web.ignoring().antMatchers("/user/signup").antMatchers(HttpMethod.DELETE,"/**");
     }
 
+    /**
+     * add config on auth.
+     * @param auth
+     * @throws Exception
+     */
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);

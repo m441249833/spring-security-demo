@@ -53,11 +53,17 @@ public class TokenLoginFilter extends UsernamePasswordAuthenticationFilter {
                         )
                 );
             }else {
-                new ObjectMapper().writeValue(response.getWriter(),"user "+user.getUsername()+" does not exist");
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                new ObjectMapper().writeValue(response.getWriter(),"{\"message\":\"user "+user.getUsername()+" does not exist\"}");
             }
 
         } catch (IOException e) {
             e.printStackTrace();
+            try {
+                new ObjectMapper().writeValue(response.getWriter(),"{\"message\":\""+e.getMessage()+"\"}");
+            }catch (IOException e1){
+
+            }
             throw new RuntimeException();
         }
         return null;

@@ -36,9 +36,7 @@ public class UserDetailServiceImpl implements UserDetailsService {
         if(!userTry.isPresent()){
             throw new UsernameNotFoundException("User does not exist");
         }
-
         User user = userTry.get();
-
         List<GrantedAuthority> permissions = new ArrayList<>();
         permissions.add(new SimpleGrantedAuthority(user.getRole().getName()));
         SecurityUser securityUser = new SecurityUser(user,permissions);

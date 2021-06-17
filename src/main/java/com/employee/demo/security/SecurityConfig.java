@@ -38,7 +38,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .exceptionHandling()
                 .authenticationEntryPoint(new UnAuthEntryPoint())
-                .and().csrf().disable()
+                .and().csrf().disable().cors().and()
                 .authorizeRequests().anyRequest().authenticated()
                 .and()
                 .addFilter(new TokenLoginFilter(this.authenticationManager(),userRepository))

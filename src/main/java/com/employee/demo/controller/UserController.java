@@ -23,14 +23,20 @@ public class UserController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<User>> getAllTasks(){
+    public ResponseEntity<List<User>> getAllUsers(){
         List<User> users = userService.getAllUser();
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getTask(@PathVariable("id") Long id){
+    public ResponseEntity<User> getUserById(@PathVariable("id") Long id){
         User user = userService.getUser(id);
+        return new ResponseEntity<>(user,HttpStatus.OK);
+    }
+
+    @GetMapping("/currentUser")
+    public ResponseEntity<User> getCurrentUser(){
+        User user = userService.getCurrentUser();
         return new ResponseEntity<>(user,HttpStatus.OK);
     }
 

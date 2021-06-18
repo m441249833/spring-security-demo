@@ -4,6 +4,7 @@ package com.employee.demo.service;
 import com.employee.demo.model.User;
 import com.employee.demo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,6 +39,11 @@ public class UserService {
     public User getUser(Long id){
         return userRepository.findById(id).orElseThrow(()-> new RuntimeException("User not found."));
     }
+    public User getCurrentUser(){
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return user;
+    }
+
 
     public User updateUser(User user){
         return userRepository.save(user);

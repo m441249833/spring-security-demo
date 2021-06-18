@@ -54,13 +54,13 @@ public class TokenLoginFilter extends UsernamePasswordAuthenticationFilter {
                 );
             }else {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                new ObjectMapper().writeValue(response.getWriter(),"{\"message\":\"user "+user.getUsername()+" does not exist\"}");
+                new ObjectMapper().writeValue(response.getWriter(),"user "+user.getUsername()+" does not exist");
             }
 
         } catch (IOException e) {
             e.printStackTrace();
             try {
-                new ObjectMapper().writeValue(response.getWriter(),"{\"message\":\""+e.getMessage()+"\"}");
+                new ObjectMapper().writeValue(response.getWriter(),e.getMessage());
             }catch (IOException e1){
 
             }
@@ -90,6 +90,6 @@ public class TokenLoginFilter extends UsernamePasswordAuthenticationFilter {
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
         response.setStatus(HttpStatus.FORBIDDEN.value());
-        response.getWriter().write("{\"message\" : \"Login Failed.\"}");
+        response.getWriter().write("Username/Password Incorrect!");
     }
 }
